@@ -43,10 +43,6 @@ def create_app():
     def teardown_request(exception):
         g.dbSession.close()
 
-    @app.route('/')
-    def index():
-        return app.send_static_file('index.html')
-
     @app.route('/novel/list/<int:novelNum>')
     def novelList(novelNum):
         return redirect(url_for('home.novelList'))

@@ -4,7 +4,6 @@ from flask import Blueprint,render_template,make_response,redirect,request,g,jso
 from flask import session as flaskSession
 from sqlalchemy import distinct,desc,or_
 from app.model.base import User,Site,Novel,Shelf,Comment,Message
-from novelSpider.task import createDownloader
 
 def object_to_dict(data, flag):
     if flag == 'shelf':
@@ -373,20 +372,4 @@ def charptCount():
         'data': {
            'count': count
         }
-    })
-
-@homeBlueprint.route('/task/getCharptList', methods=['GET'])
-def getCharptList():
-    downloader = createDownloader()
-    downloader.getCharptList(1)
-    return jsonify({
-        'status': 'success'
-    })
-
-@homeBlueprint.route('/task/getCharptContent', methods=['GET'])
-def getCharptContent():
-    downloader = createDownloader()
-    downloader.getCharptContent(charptNum=1)
-    return jsonify({
-        'status': 'success'
     })
