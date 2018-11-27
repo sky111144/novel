@@ -12,6 +12,13 @@ from flask_cors import CORS
 from sqlalchemy import distinct,desc
 
 from blueprint.home import homeBlueprint
+from blueprint.data import dataBlueprint
+from blueprint.user import userBlueprint
+from blueprint.message import messageBlueprint
+from blueprint.search import searchBlueprint
+from blueprint.comment import commentBlueprint
+from blueprint.collect import collectBlueprint
+
 from model.base import Session
 
 def create_app():
@@ -26,6 +33,12 @@ def create_app():
 
     # 注册蓝图
     app.register_blueprint(homeBlueprint)
+    app.register_blueprint(dataBlueprint)
+    app.register_blueprint(userBlueprint)
+    app.register_blueprint(messageBlueprint)
+    app.register_blueprint(searchBlueprint)
+    app.register_blueprint(commentBlueprint)
+    app.register_blueprint(collectBlueprint)
 
     @app.before_request
     def before_request():
@@ -43,6 +56,10 @@ def create_app():
     def teardown_request(exception):
         g.dbSession.close()
 
+    @app.route('/search')
+    def search():
+        return redirect(url_for('search.search'))
+
     @app.route('/novel/list/<int:novelNum>')
     def novelList(novelNum):
         return redirect(url_for('home.novelList'))
@@ -50,10 +67,6 @@ def create_app():
     @app.route('/shelf')
     def shelf():
         return redirect(url_for('home.shelf'))
-
-    @app.route('/search')
-    def search():
-        return redirect(url_for('home.search'))
 
     @app.route('/novel/<int:id>')
     def novel(id):
@@ -63,60 +76,52 @@ def create_app():
     def charpt(id, charptId):
         return redirect(url_for('home.charpt'))
 
-    @app.route('/comment/<int:novelId>')
-    def comment(novelId):
-        return redirect(url_for('home.comment'))
-
-    @app.route('/message/<int:userId>')
-    def message(userId):
-        return redirect(url_for('home.message'))
-
-    @app.route('/user/<int:userId>')
-    def userInfo(userId):
-        return redirect(url_for('home.userInfo'))
+    @app.route('/collect/<int:novelId>')
+    def collectNovel(novelId):
+        return redirect(url_for('collect.collectNovel'))
 
     @app.route('/user/comment/<int:userId>')
     def userComment(userId):
-        return redirect(url_for('home.userComment'))
+        return redirect(url_for('comment.userComment'))
+
+    @app.route('/comment/<int:novelId>')
+    def comment(novelId):
+        return redirect(url_for('comment.comment'))
 
     @app.route('/user/message/<int:userId>')
     def userMessage(userId):
-        return redirect(url_for('home.userMessage'))
+        return redirect(url_for('message.userMessage'))
+
+    @app.route('/message/<int:userId>')
+    def message(userId):
+        return redirect(url_for('message.message'))
 
     @app.route('/novel/count')
     def novelCount():
-        return redirect(url_for('home.novelCount'))
+        return redirect(url_for('data.novelCount'))
 
     @app.route('/charpt/count')
     def charptCount():
-        return redirect(url_for('home.charptCount'))
+        return redirect(url_for('data.charptCount'))
 
-    @app.route('/collect/<int:novelId>')
-    def collectNovel(novelId):
-        return redirect(url_for('home.collectNovel'))
+    @app.route('/user/<int:userId>')
+    def userInfo(userId):
+        return redirect(url_for('user.userInfo'))
 
     @app.route('/register')
     def register():
-        return redirect(url_for('home.register'))
+        return redirect(url_for('user.register'))
 
     @app.route('/login')
     def login():
-        return redirect(url_for('home.login'))
+        return redirect(url_for('user.login'))
 
     @app.route('/logout')
     def logout():
-        return redirect(url_for('home.logout'))
+        return redirect(url_for('user.logout'))
 
     @app.route('/changePassword')
     def changePassword():
-        return redirect(url_for('home.changePassword'))
-
-    @app.route('/task/getCharptList')
-    def getCharptList():
-        return redirect(url_for('home.getCharptList'))
-
-    @app.route('/task/getCharptContent')
-    def getCharptContent():
-        return redirect(url_for('home.getCharptContent'))
+        return redirect(url_for('user.changePassword'))
 
     return app
